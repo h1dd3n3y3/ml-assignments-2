@@ -1,2 +1,2 @@
 # ml-assignments-2
-Our second doublet of assignments for our Machine Learning and Computational Inteligence class.
+Our second Machine Learning and Computational Inteligence assignment doublet.
