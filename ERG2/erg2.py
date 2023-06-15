@@ -15,7 +15,7 @@ def optimize_knapsack(num_items, max_weight, items, num_particles, max_iteration
     def objective_function(positions):
         return -evaluate_fitness(positions, num_items, max_weight, items) # Return negative fitness
 
-    options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9} # Opions for optimizer
+    options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9} # Congitive, social, and inertia weight parameters
     optimizer = ps.single.GlobalBestPSO(n_particles=num_particles, dimensions=num_items, options=options, bounds=bounds) # Initialize optimizer
     best_position, best_fitness = optimizer.optimize(objective_function, iters=max_iterations) # Optimize
 
