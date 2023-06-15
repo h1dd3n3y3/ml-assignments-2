@@ -1,7 +1,11 @@
 #FUZZY LOGIC
+#Παρατηρήθηκε πως χρησιμοποιήθηκε αυτή η ιστοσελίδα για τις πληροφορίες για το αρχικό sample κώδικα που μας
+#δίνεται στο εργαστήριο:
+#https://pythonhosted.org/scikit-fuzzy/auto_examples/plot_tipping_problem_newapi.html
+
 
 import numpy as np
-#import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt            # Χρειάζεται μόνο όταν τρέχεται εκτός spyder
 import csv
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
@@ -17,43 +21,73 @@ def safe_csv_read(csvstring):            #from python docs: https://docs.python.
 
 # Επεξεργασία των δεδομένων
 
+data=safe_csv_read('source.csv')
+#print(data[0])
+data.pop(0)         # Πετάμε τα ονόματα
+                    # Το dataset έχει μαθητές διάφορων κατηγοριών πτυχίων, φύλου, εθνικότητας,τύπος μεσημεριανού
+                    # και πόσο προετοιμάστηκε για τις εξετάσεις. Θα χρησιμοποιήσουμε μόνο τους βαθμούς από τα 3
+                    # μαθήματα. Έτσι θα βγάλουμε τις άλλες πληροφορίες από το dataset.
+#print(data[0])
+data=np.array(data)
+data=data[:,5:]
+data=data.astype(np.int32)      # Επιλέγουμε τους αριθμούς και τους μετατρέπουμε σε integers καθώς τους θεωρεί 
+                                # strings η numpy. Επίσης χρησιμοποιούμε numpy για το 2D list slicing
+#print(data[0])
 
 
-#Creating the Tipping Controller Using the skfuzzy control API
+math = ctrl.Antecedent(np.arange(0, 100, 1), 'math_score')              # Είναι οι τιμές μεγιστες και ελάχιστες των βαθμβν
+reading = ctrl.Antecedent(np.arange(0, 100, 1), 'reading_score')
+writing = ctrl.Antecedent(np.arange(0, 100, 1), 'writing_score')
+overall = ctrl.Consequent(np.arange(0, 100, 1), 'overall_score')
 
-# New Antecedent/Consequent objects hold universe variables and membership functions
-quality = ctrl.Antecedent(np.arange(0, 11, 1), 'quality')#times pou pairnei to quality
-service = ctrl.Antecedent(np.arange(0, 11, 1), 'service')
-tip = ctrl.Consequent(np.arange(0, 26, 1), 'tip')
+math['bad'] = fuzz.trimf(math.universe, [0, 0, 50])     #Οι τριγωνικές που έχουμε είναι αρκετά καλές (TRIangular Membership Function generator)
+math['good'] = fuzz.trimf(math.universe, [40, 70, 80])
+math['great'] = fuzz.trimf(math.universe, [70, 100, 100])
 
-# Auto-membership function population is possible with .automf(3, 5, or 7)
-quality.automf(3)#posotita trigonon
-service.automf(3)
+reading['bad'] = fuzz.trimf(reading.universe, [0, 0, 50])
+reading['good'] = fuzz.trimf(reading.universe, [40, 70, 80])
+reading['great'] = fuzz.trimf(reading.universe, [70, 100, 100])
 
-# membership functions
-tip['low'] = fuzz.trimf(tip.universe, [0, 0, 13]) #edo kathorizo ta akra kai to meson ton trigonon
-tip['medium'] = fuzz.trimf(tip.universe, [0, 13, 25])
-tip['high'] = fuzz.trimf(tip.universe, [13, 25, 25])
+writing['bad'] = fuzz.trimf(writing.universe, [0, 0, 50])
+writing['good'] = fuzz.trimf(writing.universe, [40, 70, 80])
+writing['great'] = fuzz.trimf(writing.universe, [70, 100, 100])
 
-# You can see how these look with .view()
-quality.view()
-# quality['average'].view()
-service.view()
-tip.view()
+overall['bad'] = fuzz.trimf(overall.universe, [0, 0, 50])
+overall['good'] = fuzz.trimf(overall.universe, [40, 70, 80])
+overall['great'] = fuzz.trimf(overall.universe, [70, 100, 100])
 
-# Rules
-rule1 = ctrl.Rule(quality['poor'] | service['poor'], tip['low'])
-rule2 = ctrl.Rule(service['average'], tip['medium'])
-rule3 = ctrl.Rule(service['good'] | quality['good'], tip['high'])
+# Προβολή των plot των membership function
+math.view()
+reading.view()
+writing.view()
+overall.view()
 
-#Control System Creation and Simulation
-tipping_ctrl = ctrl.ControlSystem([rule1, rule2, rule3])
-tipping = ctrl.ControlSystemSimulation(tipping_ctrl)
-tipping.input['quality'] = 6.5
-tipping.input['service'] = 9.8
+# Κανόνες του fuzzy controller
+# Θέλουμε όταν είναι 2 από τις 3 κατηγορίες να παίρνει αυτή την κατηγορία ο μαθητής.
+rule1 = ctrl.Rule(math['bad'] & reading['bad'] | math['bad'] & writing['bad'] | writing['bad'] & reading['bad'] , overall['bad'])
+rule2 = ctrl.Rule(math['good'] & reading['good'] | math['good'] & writing['good'] | writing['good'] & reading['good'] , overall['good'])
+rule3 = ctrl.Rule(math['great'] & reading['great'] | math['great'] & writing['great'] | writing['great'] & reading['great'] , overall['great'])
 
-# Crunch the numbers
-tipping.compute()
+# Ρίχνουμε τους κανόνες μας στην βιβλιοθήκη (στο controler)
+result_ctrl = ctrl.ControlSystem([rule1, rule2, rule3])
 
-print (tipping.output['tip']) #The resulting suggested tip is 19.84%
-tip.view(sim=tipping)
+student_id=0    # Ένας μετρητής για να ξέρουμε το index του μαθητή.
+
+for i in data:
+    print("----------------------------------------------------------------------------------------")
+    print("Οι βαθμοί του μαθητή {} για τα αντίστοιχα μαθήματα: {} | {} | {}".format(student_id, i[0], i[1], i[2]))
+    result = ctrl.ControlSystemSimulation(result_ctrl)
+    result.input['math_score'] = i[0]
+    result.input['reading_score'] = i[1]
+    result.input['writing_score'] = i[2]
+    # Εδώ γίνεται ο υπολογισμός
+    result.compute()
+    
+    isBad=fuzz.interp_membership(overall.universe, overall['bad'].mf, result.output['overall_score'])   # Μπορούσε να βγεί από το documentation αλλά το πήρα από εδώ: https://stackoverflow.com/questions/73373581/skfuzzy-get-membership-value-from-output
+    isGood=fuzz.interp_membership(overall.universe, overall['good'].mf, result.output['overall_score'])
+    isGreat=fuzz.interp_membership(overall.universe, overall['great'].mf, result.output['overall_score'])
+    print("Ποσοστό ύπαρξης μέσα στις κατηγορίες bad, good, great αντίστοιχα: {} | {} | {} ".format(isBad, isGood, isGreat))
+    print ("Το κέντρο βάρους: {}".format(result.output['overall_score']))
+    print("----------------------------------------------------------------------------------------")
+    student_id=student_id+1
+    overall.view(sim=result)
