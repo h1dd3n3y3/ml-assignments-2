@@ -1,7 +1,5 @@
 import random
-import numpy as np
-import pyswarms as ps
-
+import numpy as np, pyswarms as ps
 
 def evaluate_fitness(positions, num_items, max_weight, items):
     total_value = 0
@@ -17,7 +15,6 @@ def evaluate_fitness(positions, num_items, max_weight, items):
     else:
         return total_value
 
-
 def optimize_knapsack(num_items, max_weight, items, num_particles, max_iterations):
     bounds = (np.zeros(num_items), np.ones(num_items))
 
@@ -29,8 +26,6 @@ def optimize_knapsack(num_items, max_weight, items, num_particles, max_iteration
 
     return best_position
 
-
-# Example usage
 num_items = 10
 max_weight = 50
 items = [
