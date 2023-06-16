@@ -7,7 +7,7 @@ def create_particle(num_items):
     return position, velocity, best_position
 
 def update_particle_velocity(particle, best_position, global_best_position):
-    inertia_weight = 0.7
+    inertia_weight = 0.3
     cognitive_weight = 1.4
     social_weight = 1.4
 
@@ -71,14 +71,15 @@ def run_pso(num_particles, num_items, max_weight, items, max_iterations):
 
 
 # Example usage
-num_particles = 20
+num_particles = 750
 num_items = 10
 max_weight = 50
+max_iterations = 100
 items = [
     [60, 10], [100, 20], [120, 30], [140, 40], [160, 50],
     [180, 10], [200, 20], [220, 30], [240, 40], [260, 50]
 ]
 
-solution = run_pso(num_particles, num_items, max_weight, items, 100)
+solution = run_pso(num_particles, num_items, max_weight, items, max_iterations)
 
 print("Best solution:", solution)
