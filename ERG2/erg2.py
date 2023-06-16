@@ -98,7 +98,7 @@ def run_pso(num_particles, num_items, max_weight, items, max_iterations): # Run 
 
 
 '''
-Ready example (uncomment to run):
+Ready example (uncomment this and comment lines 113-122 to run):
 
 num_particles = 750
 num_items = 10
