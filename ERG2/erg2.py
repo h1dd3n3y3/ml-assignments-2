@@ -96,7 +96,6 @@ def run_pso(num_particles, num_items, max_weight, items, max_iterations): # Run 
 
     return global_best_position
 
-
 '''
 Ready example (uncomment this and comment lines 113-122 to run):
 
