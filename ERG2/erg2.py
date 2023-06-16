@@ -72,13 +72,22 @@ def run_pso(num_particles, num_items, max_weight, items, max_iterations):
 
 # Example usage
 num_particles = 750
-num_items = 10
-max_weight = 50
+num_items = int(input("Enter number of items: "))
+max_weight = int(input("Enter maximum weight: "))
+# num_items = 10
+# max_weight = 50
+
 max_iterations = 100
-items = [
-    [60, 10], [100, 20], [120, 30], [140, 40], [160, 50],
-    [180, 10], [200, 20], [220, 30], [240, 40], [260, 50]
-]
+items = []
+
+for i in range(num_items):
+    value = int(input(f"Enter value for item {i+1}: "))
+    weight = int(input(f"Enter weight for item {i+1}: "))
+    items.append([value, weight])
+# items = [
+#     [60, 10], [100, 20], [120, 30], [140, 40], [160, 50],
+#     [180, 10], [200, 20], [220, 30], [240, 40], [260, 50]
+# ]
 
 solution = run_pso(num_particles, num_items, max_weight, items, max_iterations)
 
