@@ -88,7 +88,7 @@ data=data.astype(np.int32)      # Επιλέγουμε τους αριθμούς
 #print(data[0])
 
 
-math = ctrl.Antecedent(np.arange(0, 100, 1), 'math_score')              # Είναι οι τιμές μεγιστες και ελάχιστες των βαθμβν
+math = ctrl.Antecedent(np.arange(0, 100, 1), 'math_score')              # Είναι οι τιμές μεγιστες και ελάχιστες των βαθμών
 reading = ctrl.Antecedent(np.arange(0, 100, 1), 'reading_score')
 writing = ctrl.Antecedent(np.arange(0, 100, 1), 'writing_score')
 overall = ctrl.Consequent(np.arange(0, 100, 1), 'overall_score')
