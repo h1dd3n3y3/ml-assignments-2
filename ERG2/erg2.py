@@ -1,3 +1,29 @@
+# Run result for given input:
+'''
+Enter number of items: 10
+Enter value for item 1: 60
+Enter weight for item 1: 10
+Enter value for item 2: 100
+Enter weight for item 2: 20
+Enter value for item 3: 120
+Enter weight for item 3: 30
+Enter value for item 4: 140
+Enter weight for item 4: 40
+Enter value for item 5: 160
+Enter weight for item 5: 50
+Enter value for item 6: 180
+Enter weight for item 6: 10
+Enter value for item 7: 200
+Enter weight for item 7: 20
+Enter value for item 8: 220
+Enter weight for item 8: 30
+Enter value for item 9: 240
+Enter weight for item 9: 40
+Enter value for item 10: 260
+Enter weight for item 10: 50
+Best solution: [0, 1, 0, 0, 0, 1, 1, 0, 0, 0]
+'''
+
 import random
 
 def create_particle(num_items):
@@ -70,13 +96,22 @@ def run_pso(num_particles, num_items, max_weight, items, max_iterations):
     return global_best_position
 
 
-# Example usage
+'''
+Ready example (uncomment to run):
+
+num_particles = 750
+num_items = 10
+max_weight = 50
+max_iterations = 100
+items = [
+    [60, 10], [100, 20], [120, 30], [140, 40], [160, 50],
+    [180, 10], [200, 20], [220, 30], [240, 40], [260, 50]
+]
+'''
+
 num_particles = 750
 num_items = int(input("Enter number of items: "))
 max_weight = int(input("Enter maximum weight: "))
-# num_items = 10
-# max_weight = 50
-
 max_iterations = 100
 items = []
 
@@ -84,11 +119,6 @@ for i in range(num_items):
     value = int(input(f"Enter value for item {i+1}: "))
     weight = int(input(f"Enter weight for item {i+1}: "))
     items.append([value, weight])
-# items = [
-#     [60, 10], [100, 20], [120, 30], [140, 40], [160, 50],
-#     [180, 10], [200, 20], [220, 30], [240, 40], [260, 50]
-# ]
 
 solution = run_pso(num_particles, num_items, max_weight, items, max_iterations)
-
 print("Best solution:", solution)
