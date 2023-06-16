@@ -80,9 +80,9 @@ max_weight = int(input("Enter maximum weight: "))
 max_iterations = 100
 items = []
 
-for i in range(num_particles):
-    value = int(input(f"Enter value for item {i}: "))
-    weight = int(input(f"Enter weight for item {i}: "))
+for i in range(num_items):
+    value = int(input(f"Enter value for item {i+1}: "))
+    weight = int(input(f"Enter weight for item {i+1}: "))
     items.append([value, weight])
 # items = [
 #     [60, 10], [100, 20], [120, 30], [140, 40], [160, 50],
